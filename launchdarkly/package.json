@@ -1,0 +1,10 @@
+{
+  "name": "hello-node-server",
+  "version": "1.0.0",
+  "type": "module",
+  "description": "Hello LaunchDarkly for Node.js",
+  "main": "index.js",
+  "dependencies": {
+    "@launchdarkly/node-server-sdk": ">= 9.0.0"
+  }
+}
