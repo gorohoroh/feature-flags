@@ -1,34 +1,52 @@
-import { OpenFeature, ProviderEvents } from '@openfeature/server-sdk';
-import { LaunchDarklyProvider } from '@launchdarkly/openfeature-node-server';
-import credentials from "../credentials.json" assert { type: "json" };
+import {OpenFeature, ProviderEvents} from '@openfeature/server-sdk';
+import {LaunchDarklyProvider} from '@launchdarkly/openfeature-node-server';
+import credentials from "../credentials.json" assert {type: "json"};
 
-// Set sdkKey to your LaunchDarkly SDK key.
 const sdkKey = credentials.launchDarkly.sdkKey;
+const featureFlagKey = 'test';
 
-// Set featureFlagKey to the feature flag key you want to evaluate
-const featureFlagKey = 'my-boolean-flag';
+function showBanner() {
+    console.log(
+        `        ██
+          ██
+      ████████
+         ███████
+██ LAUNCHDARKLY █
+         ███████
+      ████████
+          ██
+        ██
+`,
+    );
+}
+
+const printValueAndBanner = flagValue => {
+    console.log(`*** The '${featureFlagKey}' feature flag evaluates to ${flagValue}.`);
+    if (flagValue) showBanner();
+};
+
+if (!sdkKey) {
+    console.log('*** Please edit index.js to set sdkKey to your LaunchDarkly SDK key first.');
+    process.exit(1);
+}
 
 // Set up the context properties. This context should appear on your LaunchDarkly contexts dashboard
 // soon after you run the demo.
-// Remember when using OpenFeature to use `targetingKey` instead of `key`.
 const context = {
-  targetingKey: 'example-user-key',
-  kind: 'user'
+    kind: 'user',
+    targetingKey: 'example-user-key', // Remember when using OpenFeature to use `targetingKey` instead of `key`.
+    name: 'Sandy'
 };
 
 OpenFeature.setProvider(new LaunchDarklyProvider(sdkKey));
+const client = OpenFeature.getClient();
 
 OpenFeature.addHandler(ProviderEvents.Ready, async (_eventDetails) => {
-  const client = OpenFeature.getClient();
-
-  const flagValue = await client.getBooleanValue(featureFlagKey, false, context);
-
-  console.log(`Feature flag '${featureFlagKey}' is ${flagValue} for this context`);
-
-  // Here we ensure that the SDK shuts down cleanly and has a chance to deliver analytics
-  // events to LaunchDarkly before the program exits. If analytics events are not delivered,
-  // the context properties and flag usage statistics will not appear on your dashboard. In a
-  // normal long-running application, the SDK would continue running and events would be
-  // delivered automatically in the background.
-  await OpenFeature.close();
+    const flagValue = await client.getBooleanValue(featureFlagKey, false, context);
+    printValueAndBanner(flagValue);
 });
+
+OpenFeature.addHandler(ProviderEvents.ConfigurationChanged, async (_eventDetails) => {
+    const flagValue = await client.getBooleanValue(featureFlagKey, false, context);
+    printValueAndBanner(flagValue);
+})

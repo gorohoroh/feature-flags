@@ -1,17 +1,12 @@
 import LaunchDarkly from "@launchdarkly/node-server-sdk";
-import credentials from "../credentials.json" assert { type: "json" };
+import credentials from "../credentials.json" assert {type: "json"};
 
-// Set sdkKey to your LaunchDarkly SDK key.
-// const sdkKey = process.env.LAUNCHDARKLY_SDK_KEY ?? 'your-sdk-key';
 const sdkKey = credentials.launchDarkly.sdkKey;
-
-// Set featureFlagKey to the feature flag key you want to evaluate.
-// const featureFlagKey = process.env.LAUNCHDARKLY_FLAG_KEY ?? 'sample-feature';
 const featureFlagKey = 'test';
 
 function showBanner() {
-  console.log(
-    `        ██
+    console.log(
+        `        ██
           ██
       ████████
          ███████
@@ -21,18 +16,17 @@ function showBanner() {
           ██
         ██
 `,
-  );
+    );
 }
 
-function printValueAndBanner(flagValue) {
-  console.log(`*** The '${featureFlagKey}' feature flag evaluates to ${flagValue}.`);
-
-  if (flagValue) showBanner();
-}
+const printValueAndBanner = flagValue => {
+    console.log(`*** The '${featureFlagKey}' feature flag evaluates to ${flagValue}.`);
+    if (flagValue) showBanner();
+};
 
 if (!sdkKey) {
-  console.log('*** Please edit index.js to set sdkKey to your LaunchDarkly SDK key first.');
-  process.exit(1);
+    console.log('*** Please edit index.js to set sdkKey to your LaunchDarkly SDK key first.');
+    process.exit(1);
 }
 
 const ldClient = LaunchDarkly.init(sdkKey);
@@ -40,30 +34,22 @@ const ldClient = LaunchDarkly.init(sdkKey);
 // Set up the context properties. This context should appear on your LaunchDarkly contexts dashboard
 // soon after you run the demo.
 const context = {
-  kind: 'user',
-  key: 'example-user-key',
-  name: 'Sandy',
+    kind: 'user',
+    key: 'example-user-key',
+    name: 'Sandy',
 };
 
-ldClient
-  .waitForInitialization()
-  .then(() => {
-    console.log('*** SDK successfully initialized!');
+try {
+    await ldClient.waitForInitialization();
 
     const eventKey = `update:${featureFlagKey}`;
     ldClient.on(eventKey, () => {
-      ldClient.variation(featureFlagKey, context, false).then(printValueAndBanner);
+        ldClient.variation(featureFlagKey, context, false).then(printValueAndBanner);
     });
 
-    ldClient.variation(featureFlagKey, context, true).then((flagValue) => {
-      printValueAndBanner(flagValue);
+    ldClient.variation(featureFlagKey, context, true).then(flagValue => printValueAndBanner(flagValue));
 
-      if(typeof process.env.CI !== "undefined") {
-        process.exit(0);
-      }
-    });
-  })
-  .catch((error) => {
+} catch (err) {
     console.log(`*** SDK failed to initialize: ${error}`);
     process.exit(1);
-  });
+}
