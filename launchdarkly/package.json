@@ -8,6 +8,6 @@
     "start": "node index.js"
   },
   "dependencies": {
-    "@launchdarkly/node-server-sdk": ">= 9.0.0"
+    "@launchdarkly/node-server-sdk": "^9.4.1"
   }
 }
