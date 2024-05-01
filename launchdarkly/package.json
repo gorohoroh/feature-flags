@@ -4,6 +4,9 @@
   "type": "module",
   "description": "Hello LaunchDarkly for Node.js",
   "main": "index.js",
+  "scripts": {
+    "start": "node index.js"
+  },
   "dependencies": {
     "@launchdarkly/node-server-sdk": ">= 9.0.0"
   }
