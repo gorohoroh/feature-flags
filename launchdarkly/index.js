@@ -24,13 +24,6 @@ const printValueAndBanner = flagValue => {
     if (flagValue) showBanner();
 };
 
-if (!sdkKey) {
-    console.log('*** Please edit index.js to set sdkKey to your LaunchDarkly SDK key first.');
-    process.exit(1);
-}
-
-const ldClient = LaunchDarkly.init(sdkKey);
-
 // Set up the context properties. This context should appear on your LaunchDarkly contexts dashboard
 // soon after you run the demo.
 const context = {
@@ -38,6 +31,8 @@ const context = {
     key: 'example-user-key',
     name: 'Sandy',
 };
+
+const ldClient = LaunchDarkly.init(sdkKey);
 
 try {
     await ldClient.waitForInitialization();
@@ -47,7 +42,7 @@ try {
         ldClient.variation(featureFlagKey, context, false).then(printValueAndBanner);
     });
 
-    ldClient.variation(featureFlagKey, context, true).then(flagValue => printValueAndBanner(flagValue));
+    ldClient.variation(featureFlagKey, context, false).then(flagValue => printValueAndBanner(flagValue));
 
 } catch (err) {
     console.log(`*** SDK failed to initialize: ${error}`);

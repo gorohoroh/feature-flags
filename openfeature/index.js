@@ -25,11 +25,6 @@ const printValueAndBanner = flagValue => {
     if (flagValue) showBanner();
 };
 
-if (!sdkKey) {
-    console.log('*** Please edit index.js to set sdkKey to your LaunchDarkly SDK key first.');
-    process.exit(1);
-}
-
 // Set up the context properties. This context should appear on your LaunchDarkly contexts dashboard
 // soon after you run the demo.
 const context = {
@@ -38,7 +33,7 @@ const context = {
     name: 'Sandy'
 };
 
-OpenFeature.setProvider(new LaunchDarklyProvider(sdkKey));
+await OpenFeature.setProviderAndWait(new LaunchDarklyProvider(sdkKey));
 const client = OpenFeature.getClient();
 
 OpenFeature.addHandler(ProviderEvents.Ready, async (_eventDetails) => {
