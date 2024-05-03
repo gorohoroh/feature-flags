@@ -2,7 +2,12 @@ import LaunchDarkly from "@launchdarkly/node-server-sdk";
 import credentials from "../credentials.json" assert {type: "json"};
 
 const sdkKey = credentials.launchDarkly.sdkKey;
-const featureFlagKey = 'test';
+const featureFlagKeys = {
+    booleanFlag: 'boolean-flag',
+    stringFlag: 'string-flag',
+    numberFlag: 'number-flag',
+    jsonFlag: 'json-flag'
+}
 
 function showBanner() {
     console.log(
@@ -19,8 +24,8 @@ function showBanner() {
     );
 }
 
-const printValueAndBanner = flagValue => {
-    console.log(`*** The '${featureFlagKey}' feature flag evaluates to ${flagValue}.`);
+const doSomethingDependingOnFeatureFlagValue = (flagKey, flagValue) => {
+    console.log(`*** The '${flagKey}' feature flag evaluates to ${flagValue}.`);
     if (flagValue) showBanner();
 };
 
@@ -35,9 +40,8 @@ const context = {
 const ldClient = LaunchDarkly.init(sdkKey);
 await ldClient.waitForInitialization();
 
-const eventKey = `update:${featureFlagKey}`;
-ldClient.on(eventKey, () => {
-    ldClient.variation(featureFlagKey, context, false).then(printValueAndBanner);
+ldClient.on(`update:${featureFlagKeys.booleanFlag}`, () => {
+    ldClient.variation(featureFlagKeys.booleanFlag, context, false).then(flagValue => doSomethingDependingOnFeatureFlagValue(featureFlagKeys.booleanFlag, flagValue));
 });
 
-ldClient.variation(featureFlagKey, context, false).then(flagValue => printValueAndBanner(flagValue));
+ldClient.variation(featureFlagKeys.booleanFlag, context, false).then(flagValue => doSomethingDependingOnFeatureFlagValue(featureFlagKeys.booleanFlag, flagValue));

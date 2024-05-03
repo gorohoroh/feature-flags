@@ -3,7 +3,12 @@ import {LaunchDarklyProvider} from '@launchdarkly/openfeature-node-server';
 import credentials from "../credentials.json" assert {type: "json"};
 
 const sdkKey = credentials.launchDarkly.sdkKey;
-const featureFlagKey = 'test';
+const featureFlagKeys = {
+    booleanFlag: 'boolean-flag',
+    stringFlag: 'string-flag',
+    numberFlag: 'number-flag',
+    jsonFlag: 'json-flag'
+}
 
 function showBanner() {
     console.log(
@@ -20,8 +25,8 @@ function showBanner() {
     );
 }
 
-const printValueAndBanner = flagValue => {
-    console.log(`*** The '${featureFlagKey}' feature flag evaluates to ${flagValue}.`);
+const doSomethingDependingOnFeatureFlagValue = (flagKey, flagValue) => {
+    console.log(`*** The '${flagKey}' feature flag evaluates to ${flagValue}.`);
     if (flagValue) showBanner();
 };
 
@@ -37,11 +42,11 @@ await OpenFeature.setProviderAndWait(new LaunchDarklyProvider(sdkKey));
 const client = OpenFeature.getClient();
 
 OpenFeature.addHandler(ProviderEvents.Ready, async (_eventDetails) => {
-    const flagValue = await client.getBooleanValue(featureFlagKey, false, context);
-    printValueAndBanner(flagValue);
+    const flagValue = await client.getBooleanValue(featureFlagKeys.booleanFlag, false, context);
+    doSomethingDependingOnFeatureFlagValue(featureFlagKeys.booleanFlag, flagValue);
 });
 
 OpenFeature.addHandler(ProviderEvents.ConfigurationChanged, async (_eventDetails) => {
-    const flagValue = await client.getBooleanValue(featureFlagKey, false, context);
-    printValueAndBanner(flagValue);
+    const flagValue = await client.getBooleanValue(featureFlagKeys.booleanFlag, false, context);
+    doSomethingDependingOnFeatureFlagValue(featureFlagKeys.booleanFlag, flagValue);
 })
