@@ -33,18 +33,11 @@ const context = {
 };
 
 const ldClient = LaunchDarkly.init(sdkKey);
+await ldClient.waitForInitialization();
 
-try {
-    await ldClient.waitForInitialization();
+const eventKey = `update:${featureFlagKey}`;
+ldClient.on(eventKey, () => {
+    ldClient.variation(featureFlagKey, context, false).then(printValueAndBanner);
+});
 
-    const eventKey = `update:${featureFlagKey}`;
-    ldClient.on(eventKey, () => {
-        ldClient.variation(featureFlagKey, context, false).then(printValueAndBanner);
-    });
-
-    ldClient.variation(featureFlagKey, context, false).then(flagValue => printValueAndBanner(flagValue));
-
-} catch (err) {
-    console.log(`*** SDK failed to initialize: ${error}`);
-    process.exit(1);
-}
+ldClient.variation(featureFlagKey, context, false).then(flagValue => printValueAndBanner(flagValue));
