@@ -41,43 +41,43 @@ const getBooleanFlag = async ldClient => {
 };
 
 const getStringFlag = async ldClient => {
-    ldClient.variation(featureFlagKeys.stringFlag, context, false).then(flagValue => doSomethingDependingOnFeatureFlagValue(featureFlagKeys.stringFlag, flagValue));
+    ldClient.variation(featureFlagKeys.stringFlag, context, "red").then(flagValue => doSomethingDependingOnFeatureFlagValue(featureFlagKeys.stringFlag, flagValue));
     const flagValue = await ldClient.variation(featureFlagKeys.stringFlag, context, "red");
     doSomethingDependingOnFeatureFlagValue(featureFlagKeys.stringFlag, flagValue);
 
-    ldClient.stringVariation(featureFlagKeys.stringFlag, context, false).then(flagValue => doSomethingDependingOnFeatureFlagValue(featureFlagKeys.stringFlag, flagValue));
+    ldClient.stringVariation(featureFlagKeys.stringFlag, context, "red").then(flagValue => doSomethingDependingOnFeatureFlagValue(featureFlagKeys.stringFlag, flagValue));
     const stringFlagValue = await ldClient.stringVariation(featureFlagKeys.stringFlag, context, "red");
     doSomethingDependingOnFeatureFlagValue(featureFlagKeys.stringFlag, stringFlagValue);
 
-    ldClient.stringVariationDetail(featureFlagKeys.stringFlag, context, false).then(flagValue => doSomethingDependingOnFeatureFlagValue(featureFlagKeys.stringFlag, flagValue));
+    ldClient.stringVariationDetail(featureFlagKeys.stringFlag, context, "red").then(flagValue => doSomethingDependingOnFeatureFlagValue(featureFlagKeys.stringFlag, flagValue));
     const stringFlagDetails = await ldClient.stringVariationDetail(featureFlagKeys.stringFlag, context, "red");
     doSomethingDependingOnFeatureFlagValue(featureFlagKeys.stringFlag, stringFlagDetails);
 };
 
 const getNumberFlag = async ldClient => {
-    ldClient.variation(featureFlagKeys.numberFlag, context, false).then(flagValue => doSomethingDependingOnFeatureFlagValue(featureFlagKeys.numberFlag, flagValue));
+    ldClient.variation(featureFlagKeys.numberFlag, context, 50).then(flagValue => doSomethingDependingOnFeatureFlagValue(featureFlagKeys.numberFlag, flagValue));
     const flagValue = await ldClient.variation(featureFlagKeys.numberFlag, context, 50);
     doSomethingDependingOnFeatureFlagValue(featureFlagKeys.numberFlag, flagValue);
 
-    ldClient.numberVariation(featureFlagKeys.numberFlag, context, false).then(flagValue => doSomethingDependingOnFeatureFlagValue(featureFlagKeys.numberFlag, flagValue));
+    ldClient.numberVariation(featureFlagKeys.numberFlag, context, 50).then(flagValue => doSomethingDependingOnFeatureFlagValue(featureFlagKeys.numberFlag, flagValue));
     const numberFlagValue = await ldClient.numberVariation(featureFlagKeys.numberFlag, context, 50);
     doSomethingDependingOnFeatureFlagValue(featureFlagKeys.numberFlag, numberFlagValue);
 
-    ldClient.numberVariationDetail(featureFlagKeys.numberFlag, context, false).then(flagValue => doSomethingDependingOnFeatureFlagValue(featureFlagKeys.numberFlag, flagValue));
+    ldClient.numberVariationDetail(featureFlagKeys.numberFlag, context, 50).then(flagValue => doSomethingDependingOnFeatureFlagValue(featureFlagKeys.numberFlag, flagValue));
     const numberFlagDetails = await ldClient.numberVariationDetail(featureFlagKeys.numberFlag, context, 50);
     doSomethingDependingOnFeatureFlagValue(featureFlagKeys.numberFlag, numberFlagDetails);
 };
 
 const getJsonFlag = async ldClient => {
-    ldClient.variation(featureFlagKeys.jsonFlag, context, false).then(flagValue => doSomethingDependingOnFeatureFlagValue(featureFlagKeys.jsonFlag, flagValue));
+    ldClient.variation(featureFlagKeys.jsonFlag, context, {}).then(flagValue => doSomethingDependingOnFeatureFlagValue(featureFlagKeys.jsonFlag, flagValue));
     const flagValue = await ldClient.variation(featureFlagKeys.jsonFlag, context, {});
     doSomethingDependingOnFeatureFlagValue(featureFlagKeys.jsonFlag, flagValue);
 
-    ldClient.jsonVariation(featureFlagKeys.jsonFlag, context, false).then(flagValue => doSomethingDependingOnFeatureFlagValue(featureFlagKeys.jsonFlag, flagValue));
+    ldClient.jsonVariation(featureFlagKeys.jsonFlag, context, {}).then(flagValue => doSomethingDependingOnFeatureFlagValue(featureFlagKeys.jsonFlag, flagValue));
     const jsonFlagValue = await ldClient.jsonVariation(featureFlagKeys.jsonFlag, context, {});
     doSomethingDependingOnFeatureFlagValue(featureFlagKeys.jsonFlag, jsonFlagValue);
 
-    ldClient.jsonVariationDetail(featureFlagKeys.jsonFlag, context, false).then(flagValue => doSomethingDependingOnFeatureFlagValue(featureFlagKeys.jsonFlag, flagValue));
+    ldClient.jsonVariationDetail(featureFlagKeys.jsonFlag, context, {}).then(flagValue => doSomethingDependingOnFeatureFlagValue(featureFlagKeys.jsonFlag, flagValue));
     const jsonFlagDetails = await ldClient.jsonVariationDetail(featureFlagKeys.jsonFlag, context, {});
     doSomethingDependingOnFeatureFlagValue(featureFlagKeys.jsonFlag, jsonFlagDetails);
 };
