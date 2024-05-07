@@ -100,7 +100,6 @@ const listenToEvents = async ldClient => {
         console.log(`Configuration of flag ${featureFlagKeys.booleanFlag} has changed`)
         ldClient.variation(featureFlagKeys.booleanFlag, context, false).then(flagValue => doSomethingDependingOnFeatureFlagValue(featureFlagKeys.booleanFlag, flagValue));
     });
-
 };
 
 getBooleanFlag(ldClient);
