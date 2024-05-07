@@ -3,11 +3,23 @@ import {LaunchDarklyProvider} from '@launchdarkly/openfeature-node-server';
 import credentials from "../credentials.json" assert {type: "json"};
 
 const sdkKey = credentials.launchDarkly.sdkKey;
-const featureFlagKeys = {
-    booleanFlag: 'boolean-flag',
-    stringFlag: 'string-flag',
-    numberFlag: 'number-flag',
-    jsonFlag: 'json-flag'
+const featureFlags = {
+    booleanFlag: {
+        key: 'boolean-flag',
+        type: 'boolean'
+    },
+    stringFlag: {
+        key: 'string-flag',
+        type: 'string'
+    },
+    numberFlag: {
+        key: 'number-flag',
+        type: 'number'
+    },
+    jsonFlag: {
+        key: 'json-flag',
+        type: 'object'
+    }
 }
 
 const doSomethingDependingOnFeatureFlagValue = (flagKey, flagValue) => {
@@ -24,43 +36,43 @@ await OpenFeature.setProviderAndWait(new LaunchDarklyProvider(sdkKey));
 const client = OpenFeature.getClient();
 
 const getBooleanFlag = async client => {
-    client.getBooleanValue(featureFlagKeys.booleanFlag, false, context).then(flagValue => doSomethingDependingOnFeatureFlagValue(featureFlagKeys.booleanFlag, flagValue));
-    const booleanFlagValue = await client.getBooleanValue(featureFlagKeys.booleanFlag, false, context);
-    doSomethingDependingOnFeatureFlagValue(featureFlagKeys.booleanFlag, booleanFlagValue);
+    client.getBooleanValue(featureFlags.booleanFlag.key, false, context).then(flagValue => doSomethingDependingOnFeatureFlagValue(featureFlags.booleanFlag.key, flagValue));
+    const booleanFlagValue = await client.getBooleanValue(featureFlags.booleanFlag.key, false, context);
+    doSomethingDependingOnFeatureFlagValue(featureFlags.booleanFlag.key, booleanFlagValue);
 
-    client.getBooleanDetails(featureFlagKeys.booleanFlag, false, context).then(flagValue => doSomethingDependingOnFeatureFlagValue(featureFlagKeys.booleanFlag, flagValue));
-    const booleanFlagDetails = await client.getBooleanValue(featureFlagKeys.booleanFlag, false, context);
-    doSomethingDependingOnFeatureFlagValue(featureFlagKeys.booleanFlag, booleanFlagDetails);
+    client.getBooleanDetails(featureFlags.booleanFlag.key, false, context).then(flagValue => doSomethingDependingOnFeatureFlagValue(featureFlags.booleanFlag.key, flagValue));
+    const booleanFlagDetails = await client.getBooleanValue(featureFlags.booleanFlag.key, false, context);
+    doSomethingDependingOnFeatureFlagValue(featureFlags.booleanFlag.key, booleanFlagDetails);
 };
 
 const getStringFlag = async client => {
-    client.getStringValue(featureFlagKeys.stringFlag, "red", context).then(flagValue => doSomethingDependingOnFeatureFlagValue(featureFlagKeys.stringFlag, flagValue));
-    const stringFlagValue = await client.getStringValue(featureFlagKeys.stringFlag, "red", context);
-    doSomethingDependingOnFeatureFlagValue(featureFlagKeys.stringFlag, stringFlagValue);
+    client.getStringValue(featureFlags.stringFlag.key, "red", context).then(flagValue => doSomethingDependingOnFeatureFlagValue(featureFlags.stringFlag.key, flagValue));
+    const stringFlagValue = await client.getStringValue(featureFlags.stringFlag.key, "red", context);
+    doSomethingDependingOnFeatureFlagValue(featureFlags.stringFlag.key, stringFlagValue);
 
-    client.getStringDetails(featureFlagKeys.stringFlag, "red", context).then(flagValue => doSomethingDependingOnFeatureFlagValue(featureFlagKeys.stringFlag, flagValue));
-    const stringFlagDetails = await client.getStringValue(featureFlagKeys.stringFlag, "red", context);
-    doSomethingDependingOnFeatureFlagValue(featureFlagKeys.stringFlag, stringFlagDetails);
+    client.getStringDetails(featureFlags.stringFlag.key, "red", context).then(flagValue => doSomethingDependingOnFeatureFlagValue(featureFlags.stringFlag.key, flagValue));
+    const stringFlagDetails = await client.getStringValue(featureFlags.stringFlag.key, "red", context);
+    doSomethingDependingOnFeatureFlagValue(featureFlags.stringFlag.key, stringFlagDetails);
 };
 
 const getNumberFlag = async client => {
-    client.getNumberValue(featureFlagKeys.numberFlag, 50, context).then(flagValue => doSomethingDependingOnFeatureFlagValue(featureFlagKeys.numberFlag, flagValue));
-    const numberFlagValue = await client.getNumberValue(featureFlagKeys.numberFlag, 50, context);
-    doSomethingDependingOnFeatureFlagValue(featureFlagKeys.numberFlag, numberFlagValue);
+    client.getNumberValue(featureFlags.numberFlag.key, 50, context).then(flagValue => doSomethingDependingOnFeatureFlagValue(featureFlags.numberFlag.key, flagValue));
+    const numberFlagValue = await client.getNumberValue(featureFlags.numberFlag.key, 50, context);
+    doSomethingDependingOnFeatureFlagValue(featureFlags.numberFlag.key, numberFlagValue);
 
-    client.getNumberDetails(featureFlagKeys.numberFlag, 50, context).then(flagValue => doSomethingDependingOnFeatureFlagValue(featureFlagKeys.numberFlag, flagValue));
-    const numberFlagDetails = await client.getNumberValue(featureFlagKeys.numberFlag, 50, context);
-    doSomethingDependingOnFeatureFlagValue(featureFlagKeys.numberFlag, numberFlagDetails);
+    client.getNumberDetails(featureFlags.numberFlag.key, 50, context).then(flagValue => doSomethingDependingOnFeatureFlagValue(featureFlags.numberFlag.key, flagValue));
+    const numberFlagDetails = await client.getNumberValue(featureFlags.numberFlag.key, 50, context);
+    doSomethingDependingOnFeatureFlagValue(featureFlags.numberFlag.key, numberFlagDetails);
 };
 
 const getJsonFlag = async client => {
-    client.getObjectValue(featureFlagKeys.jsonFlag, {}, context).then(flagValue => doSomethingDependingOnFeatureFlagValue(featureFlagKeys.jsonFlag, flagValue));
-    const jsonFlagValue = await client.getObjectValue(featureFlagKeys.jsonFlag, {}, context);
-    doSomethingDependingOnFeatureFlagValue(featureFlagKeys.jsonFlag, jsonFlagValue);
+    client.getObjectValue(featureFlags.jsonFlag.key, {}, context).then(flagValue => doSomethingDependingOnFeatureFlagValue(featureFlags.jsonFlag.key, flagValue));
+    const jsonFlagValue = await client.getObjectValue(featureFlags.jsonFlag.key, {}, context);
+    doSomethingDependingOnFeatureFlagValue(featureFlags.jsonFlag.key, jsonFlagValue);
 
-    client.getObjectDetails(featureFlagKeys.jsonFlag, {}, context).then(flagValue => doSomethingDependingOnFeatureFlagValue(featureFlagKeys.jsonFlag, flagValue));
-    const jsonFlagDetails = await client.getObjectValue(featureFlagKeys.jsonFlag, {}, context);
-    doSomethingDependingOnFeatureFlagValue(featureFlagKeys.jsonFlag, jsonFlagDetails);
+    client.getObjectDetails(featureFlags.jsonFlag.key, {}, context).then(flagValue => doSomethingDependingOnFeatureFlagValue(featureFlags.jsonFlag.key, flagValue));
+    const jsonFlagDetails = await client.getObjectValue(featureFlags.jsonFlag.key, {}, context);
+    doSomethingDependingOnFeatureFlagValue(featureFlags.jsonFlag.key, jsonFlagDetails);
 };
 
 const listenToEvents = async client => {
@@ -77,12 +89,20 @@ const listenToEvents = async client => {
     OpenFeature.addHandler(ProviderEvents.ConfigurationChanged, async (_eventDetails) => {
         const changedFlag = _eventDetails.flagsChanged[0];
         console.log(`Configuration of flag ${changedFlag} has changed`)
-        const flagValues = [];
-        flagValues[0] = await client.getBooleanValue(changedFlag, null, context);
-        flagValues[1] = await client.getStringValue(changedFlag, null, context);
-        flagValues[2] = await client.getNumberValue(changedFlag, null, context);
-        flagValues[3] = await client.getObjectValue(changedFlag, null, context);
-        const flagValue = flagValues.find(x => x !== null);
+        const flagType = Object.values(featureFlags).find(x => x.key === changedFlag).type;
+
+        let flagValue;
+        if (flagType === "boolean") {
+            flagValue = await client.getBooleanValue(changedFlag, false, context);
+        } else if (flagType === "string") {
+            flagValue = await client.getStringValue(changedFlag, "red", context);
+        } else if (flagType === "number") {
+            flagValue = await client.getNumberValue(changedFlag, 50, context);
+        } else if (flagType === "object") {
+            flagValue = await client.getObjectValue(changedFlag, null, context);
+        } else {
+            console.log('Something went awry: we don\'t know the type of the updated flag')
+        }
         doSomethingDependingOnFeatureFlagValue(changedFlag, flagValue);
     })
 
