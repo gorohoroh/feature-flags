@@ -10,7 +10,7 @@ const featureFlagKeys = {
 }
 
 const doSomethingDependingOnFeatureFlagValue = (flagKey, flagValue) => {
-    console.log(`*** The '${flagKey}' feature flag evaluates to ${JSON.stringify(flagValue)}.`);
+    console.log(`*** The '${JSON.stringify(flagKey)}' feature flag evaluates to ${JSON.stringify(flagValue)}.`);
 };
 
 const context = {
@@ -21,10 +21,6 @@ const context = {
 
 const ldClient = LaunchDarkly.init(sdkKey);
 await ldClient.waitForInitialization();
-
-ldClient.on(`update:${featureFlagKeys.booleanFlag}`, () => {
-    ldClient.variation(featureFlagKeys.booleanFlag, context, false).then(flagValue => doSomethingDependingOnFeatureFlagValue(featureFlagKeys.booleanFlag, flagValue));
-});
 
 const getBooleanFlag = async ldClient => {
     ldClient.variation(featureFlagKeys.booleanFlag, context, false).then(flagValue => doSomethingDependingOnFeatureFlagValue(featureFlagKeys.booleanFlag, flagValue));
@@ -82,9 +78,33 @@ const getJsonFlag = async ldClient => {
     doSomethingDependingOnFeatureFlagValue(featureFlagKeys.jsonFlag, jsonFlagDetails);
 };
 
+const listenToEvents = async ldClient => {
+    ldClient.on('ready', () => {
+        console.log("We're connected to LaunchDarkly :)")
+    });
+
+    ldClient.on('failed', () => {
+        console.log("Failed to connect to LaunchDarkly :(")
+    });
+
+    ldClient.on('error', error => {
+        console.log(`The LaunchDarkly client has encountered an error. Here are the details: ${JSON.stringify(error)}`)
+    });
+
+    ldClient.on('update', keyObject => {
+        console.log(`Configuration of flag ${keyObject.key} has changed`)
+        ldClient.variation(keyObject.key, context, false).then(flagValue => doSomethingDependingOnFeatureFlagValue(keyObject.key, flagValue))
+    });
+
+    ldClient.on(`update:${featureFlagKeys.booleanFlag}`, () => {
+        console.log(`Configuration of flag ${featureFlagKeys.booleanFlag} has changed`)
+        ldClient.variation(featureFlagKeys.booleanFlag, context, false).then(flagValue => doSomethingDependingOnFeatureFlagValue(featureFlagKeys.booleanFlag, flagValue));
+    });
+
+};
+
 getBooleanFlag(ldClient);
 getStringFlag(ldClient);
 getNumberFlag(ldClient);
 getJsonFlag(ldClient);
-
-
+listenToEvents(ldClient);
