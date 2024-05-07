@@ -1,0 +1,18 @@
+{
+  "name": "hello-node-server",
+  "version": "1.0.0",
+  "type": "module",
+  "description": "Hello OpenFeature for Node.js (with TypeScript)",
+  "main": "index.js",
+  "scripts": {
+    "start": "tsc && cd built/openfeature-ts/src && node index.js"
+  },
+  "dependencies": {
+    "@launchdarkly/openfeature-node-server": "0.5.1",
+    "@openfeature/server-sdk": "^1.6.3",
+    "@launchdarkly/node-server-sdk": "^9.4.1"
+  },
+  "devDependencies": {
+    "@types/node": "^20.12.10"
+  }
+}
