@@ -23,11 +23,6 @@ const context = {
 await OpenFeature.setProviderAndWait(new LaunchDarklyProvider(sdkKey));
 const client = OpenFeature.getClient();
 
-OpenFeature.addHandler(ProviderEvents.ConfigurationChanged, async (_eventDetails) => {
-    const flagValue = await client.getBooleanValue(featureFlagKeys.booleanFlag, false, context);
-    doSomethingDependingOnFeatureFlagValue(featureFlagKeys.booleanFlag, flagValue);
-})
-
 const getBooleanFlag = async client => {
     client.getBooleanValue(featureFlagKeys.booleanFlag, false, context).then(flagValue => doSomethingDependingOnFeatureFlagValue(featureFlagKeys.booleanFlag, flagValue));
     const booleanFlagValue = await client.getBooleanValue(featureFlagKeys.booleanFlag, false, context);
@@ -68,7 +63,34 @@ const getJsonFlag = async client => {
     doSomethingDependingOnFeatureFlagValue(featureFlagKeys.jsonFlag, jsonFlagDetails);
 };
 
+const listenToEvents = async client => {
+    OpenFeature.addHandler(ProviderEvents.Ready, () => {
+        console.log("We're connected to LaunchDarkly through OpenFeature :)")
+    })
+
+    /*No equivalent of "failed"*/
+
+    OpenFeature.addHandler(ProviderEvents.Error, error => {
+        console.log(`The OpenFeature client for LaunchDarkly has encountered an error. Here are the details: ${JSON.stringify(error)}`)
+    })
+
+    OpenFeature.addHandler(ProviderEvents.ConfigurationChanged, async (_eventDetails) => {
+        const changedFlag = _eventDetails.flagsChanged[0];
+        console.log(`Configuration of flag ${changedFlag} has changed`)
+        const flagValues = [];
+        flagValues[0] = await client.getBooleanValue(changedFlag, null, context);
+        flagValues[1] = await client.getStringValue(changedFlag, null, context);
+        flagValues[2] = await client.getNumberValue(changedFlag, null, context);
+        flagValues[3] = await client.getObjectValue(changedFlag, null, context);
+        const flagValue = flagValues.find(x => x !== null);
+        doSomethingDependingOnFeatureFlagValue(changedFlag, flagValue);
+    })
+
+    /*No equivalent of "update:key"*/
+};
+
 getBooleanFlag(client);
 getStringFlag(client);
 getNumberFlag(client);
 getJsonFlag(client);
+listenToEvents(client);
